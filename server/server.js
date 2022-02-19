@@ -15,11 +15,14 @@ app.use(require('./routes/user'))
 
 const PORT = process.env.PORT;
 
-mongoose.connect('mongodb://localhost:27017/cafe', (err, res) => {
-    if( err ) throw err;
+mongoose.connect('mongodb://localhost:27017/cafe', 
+    // {useNewUrlParser: true, useCreateIndex: true},
+        (err, res) => {
+            if( err ) throw err;
 
-    console.log('Base de datos ONLINE')
-});
+            console.log('Base de datos ONLINE')
+        }
+);
 
 app.listen(PORT, () => {
     console.log('Escuchando peticiones en puerto: ', PORT)
