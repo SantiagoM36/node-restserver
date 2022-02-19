@@ -6,7 +6,7 @@ const app = express();
 
 const Usuario = require('../models/user');
 
-app.get('/usuario', (req, res) => {
+app.get('/users', (req, res) => {
 
     let from = req.query.from || 0;
     from = Number(from);
@@ -38,7 +38,7 @@ app.get('/usuario', (req, res) => {
             });
 })
 
-app.post('/usuario', (req, res) => {
+app.post('/user', (req, res) => {
 
     let body = req.body;
 
@@ -68,7 +68,7 @@ app.post('/usuario', (req, res) => {
 
 })
 
-app.put('/usuario/:id', (req, res) => {
+app.put('/user/:id', (req, res) => {
 
     let id = req.params.id;
     let body = _.pick(req.body, ['name', 'email', 'img', 'role', 'state']);
@@ -95,7 +95,7 @@ app.put('/usuario/:id', (req, res) => {
     
 })
 
-app.delete('/usuario/:id', (req, res) => {
+app.delete('/user/:id', (req, res) => {
     
     let id = req.params.id;
 
