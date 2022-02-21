@@ -13,10 +13,10 @@ app.use(bodyParser.json())
 
 app.use(require('./routes/user'))
 
-const PORT = process.env.PORT;
+const { PORT, URLDB } = process.env;
 
-mongoose.connect(process.env.URLDB, 
-    // {useNewUrlParser: true, useCreateIndex: true},
+mongoose.connect(URLDB, 
+       //{useNewUrlParser: true, useCreateIndex: true},
         (err, res) => {
             if( err ) throw err;
 
