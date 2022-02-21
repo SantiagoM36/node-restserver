@@ -11,6 +11,23 @@ process.env.PORT = process.env.PORT || 8080;
 process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 
 // ================================
+//          EXPIRED TOKEN 
+// ================================
+
+// 60 seconds
+// 60 minutes
+// 24 hours
+// 30 days
+
+process.env.EXPIRED_TOKEN = 60 * 60 *24 * 30;
+
+// ================================
+//              SEED
+// ================================
+
+process.env.SEED = process.env.SEED || 'seed-dev';
+
+// ================================
 //               BD
 // ================================
 

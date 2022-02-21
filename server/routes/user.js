@@ -5,8 +5,9 @@ const _ = require('underscore');
 const app = express();
 
 const Usuario = require('../models/user');
+const { verifyingToken, verifyingAdminRole } = require('../middlewares/authentication')
 
-app.get('/users', (req, res) => {
+app.get('/users', verifyingToken, (req, res) => {
 
     let from = req.query.from || 0;
     from = Number(from);
@@ -14,31 +15,31 @@ app.get('/users', (req, res) => {
     let limit = req.query.limit || 5;
     limit = Number(limit);
 
-    Usuario.find({state: true}, 'name email role state google')
-            .skip(from)
-            .limit(limit)
-            .exec((err, users) => {
-                if(err) {
-                    res.status(400).json({
-                        ok: false,
-                        err
-                    })
-                    return;
-                }
-
-                Usuario.count({state: true}, (err, count) => {
-                    res.json({
-                        ok: true,
-                        users,
-                        count
-                    });
+    Usuario.find({ state: true }, 'name email role state google')
+        .skip(from)
+        .limit(limit)
+        .exec((err, users) => {
+            if (err) {
+                res.status(400).json({
+                    ok: false,
+                    err
                 })
+                return;
+            }
 
-                
-            });
+            Usuario.count({ state: true }, (err, count) => {
+                res.json({
+                    ok: true,
+                    users,
+                    count
+                });
+            })
+
+
+        });
 })
 
-app.post('/user', (req, res) => {
+app.post('/user', [verifyingToken, verifyingAdminRole], (req, res) => {
 
     let body = req.body;
 
@@ -50,7 +51,7 @@ app.post('/user', (req, res) => {
     });
 
     usuario.save((err, userDB) => {
-        if(err) {
+        if (err) {
             res.status(400).json({
                 ok: false,
                 err
@@ -68,7 +69,7 @@ app.post('/user', (req, res) => {
 
 })
 
-app.put('/user/:id', (req, res) => {
+app.put('/user/:id', [verifyingToken, verifyingAdminRole], (req, res) => {
 
     let id = req.params.id;
     let body = _.pick(req.body, ['name', 'email', 'img', 'role', 'state']);
@@ -76,9 +77,9 @@ app.put('/user/:id', (req, res) => {
     /*delete body.password;
     delete body.google;*/
 
-    Usuario.findByIdAndUpdate(id, body, { new:true, runValidators: true }, (err, userDB) => {
+    Usuario.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (err, userDB) => {
 
-        if(err) {
+        if (err) {
             res.status(400).json({
                 ok: false,
                 err
@@ -92,22 +93,22 @@ app.put('/user/:id', (req, res) => {
         });
 
     })
-    
+
 })
 
-app.delete('/user/:id', (req, res) => {
-    
+app.delete('/user/:id', [verifyingToken, verifyingAdminRole], (req, res) => {
+
     let id = req.params.id;
 
-   
+
 
     //Usuario.findByIdAndRemove(id, (err, userDelete) => {
 
-    let changeState = {state: false}
+    let changeState = { state: false }
 
-    Usuario.findByIdAndUpdate(id, changeState, { new:true }, (err, userDelete) => {
+    Usuario.findByIdAndUpdate(id, changeState, { new: true }, (err, userDelete) => {
 
-        if(err) {
+        if (err) {
             res.status(400).json({
                 ok: false,
                 err
@@ -115,7 +116,7 @@ app.delete('/user/:id', (req, res) => {
             return;
         }
 
-        if( !userDelete ) {
+        if (!userDelete) {
             res.status(400).json({
                 ok: false,
                 err: {
